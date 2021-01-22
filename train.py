@@ -36,7 +36,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = Simple()
 model = model.to(device)
 
-summary(model, input_size=(3, 640, 640))
+summary(model, input_size=(3, 240, 240))
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(device)
