@@ -8,7 +8,7 @@ pyparsing==2.4.7
 python-dateutil==2.8.1
 six==1.15.0
 torch==1.7.1+cpu
-torch-summary==1.4.5
 torchaudio==0.7.2
+torchinfo==0.0.5
 torchvision==0.8.2+cpu
 typing-extensions==3.7.4.3

@@ -7,7 +7,7 @@ import torch.optim as optim
 from torch.optim import lr_scheduler
 from torch.utils.data import DataLoader
 from dataloader import Dataset
-from torchsummary import summary
+from torchinfo import summary
 import time
 import copy
 
