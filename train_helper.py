@@ -18,7 +18,7 @@ def dice_loss(pred, target, smooth = 1.):
 def calc_loss(pred, target, metrics, bce_weight=0.5):
     bce = F.binary_cross_entropy_with_logits(pred, target)
         
-    pred = F.sigmoid(pred)
+    pred = torch.sigmoid(pred)
     dice = dice_loss(pred, target)
     
     loss = bce * bce_weight + dice * (1 - bce_weight)
@@ -36,7 +36,7 @@ def print_metrics(metrics, epoch_samples, phase):
         
     print("{}: {}".format(phase, ", ".join(outputs)))    
 
-def train_model(model, dataloaders, optimizer, scheduler, device, num_epochs=25):
+def train_model(model, dataloaders, optimizer, device, num_epochs=25):
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = 1e10
 
@@ -49,7 +49,6 @@ def train_model(model, dataloaders, optimizer, scheduler, device, num_epochs=25)
         # Each epoch has a training and validation phase
         for phase in ['train', 'val']:
             if phase == 'train':
-                scheduler.step()
                 for param_group in optimizer.param_groups:
                     print("LR", param_group['lr'])
                     

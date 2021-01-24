@@ -63,8 +63,8 @@ class VggUnet(nn.Module):
         x = self.upsample(x)        
         x = torch.cat([x, conv1], dim=1)
         x = self.conv_up1(x)
-        x = self.conv_last(x)
+        out = self.conv_last(x)
         
-        out = self.activation(x)
+        #out = self.activation(x)
         return out  
   
