@@ -13,6 +13,7 @@ import copy
 
 from models.unet import UNet
 from models.simple import Simple
+from models.vgg_unet import VggUnet
 from train_helper import *
 from dataloader import Dataset
 
@@ -33,15 +34,15 @@ dataloaders = {
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-model = Simple()
+model = VggUnet()
 model = model.to(device)
 
-summary(model, input_size=(3, 240, 240))
+summary(model, input_size=(batch_size, 3, 416, 416))
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(device)
 
-model = Simple().to(device)
+model = VggUnet().to(device)
 
 # Observe that all parameters are being optimized
 optimizer_ft = optim.Adam(model.parameters(), lr=1e-4)

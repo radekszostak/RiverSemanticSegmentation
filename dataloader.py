@@ -42,7 +42,7 @@ class Dataset(BaseDataset):
         
    
     def __getitem__(self, i):
-        size = (240,240)
+        size = (416,416)
         # read data
         image = cv2.imread(self.images_fps[i])
         image = cv2.resize(image, size, interpolation = cv2.INTER_AREA)
