@@ -47,7 +47,7 @@ model = VggUnet().to(device)
 # Observe that all parameters are being optimized
 optimizer_ft = optim.Adam(model.parameters(), lr=1e-4)
 
-exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=25, gamma=0.1)
+#exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=25, gamma=0.1)
 
-model = train_model(model, dataloaders, optimizer_ft, exp_lr_scheduler, device, num_epochs=40)
+model = train_model(model, dataloaders, optimizer_ft, device, num_epochs=40)
 
