@@ -1,3 +1,5 @@
 dataset
 .venv
 .vscode
+__pycache__
+*.obj
