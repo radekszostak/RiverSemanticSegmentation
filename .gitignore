@@ -3,3 +3,5 @@ dataset
 .vscode
 __pycache__
 *.obj
+*.pt
+*.pth
