@@ -11,13 +11,15 @@ class Dataset(BaseDataset):
             self, 
             images_dir, 
             masks_dir,
-            img_size,
-            count=0
+            input_size,
+            output_size,
+            count=-1
     ):
         self.count = count
-        self.img_size = (img_size, img_size)
+        self.input_size = (input_size, input_size)
+        self.output_size = (output_size, output_size)
         self.ids = [file_name.split(".")[0] for file_name in os.listdir(images_dir)]
-        if count:
+        if count>0:
           self.ids = self.ids[:count]
         self.images_fps = [os.path.join(images_dir, image_id + ".jpg") for image_id in self.ids]
         self.masks_fps = [os.path.join(masks_dir, image_id + ".png") for image_id in self.ids]
@@ -29,12 +31,12 @@ class Dataset(BaseDataset):
     def __getitem__(self, i):
 
         image = cv2.imread(self.images_fps[i])
-        image = cv2.resize(image, self.img_size, interpolation = cv2.INTER_AREA)
+        image = cv2.resize(image, self.input_size, interpolation = cv2.INTER_AREA)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image = self.image_transform(image)
 
         mask = cv2.imread(self.masks_fps[i], 0)
-        mask = cv2.resize(mask, self.img_size, interpolation = cv2.INTER_NEAREST)
+        mask = cv2.resize(mask, self.output_size, interpolation = cv2.INTER_NEAREST)
         mask = mask.astype(np.float32)
         mask = torch.from_numpy(mask)
         mask = torch.unsqueeze(mask, 0)
