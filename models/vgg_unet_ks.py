@@ -1,7 +1,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torchvision.models as models
 
+vgg16_pretrained = models.vgg16(pretrained=True)
 
 def double_conv(in_channels, out_channels):
     return nn.Sequential(
@@ -26,9 +28,9 @@ def conv_up(in_channels, out_channels):
         nn.BatchNorm2d(out_channels,0.001,0.99)
     )
 class VggUnetKs(nn.Module):
-    def __init__(self):
+    def __init__(self, n_channels=2 ):
         super().__init__()
-        
+        #self.vgg16 = vgg16_pretrained.features
         self.conv_down1 = double_conv(3, 64)
         self.conv_down2 = double_conv(64, 128)
         self.conv_down3 = triple_conv(128, 256)
@@ -39,12 +41,13 @@ class VggUnetKs(nn.Module):
         self.conv_up3 = conv_up(512+256,256)
         self.conv_up2 = conv_up(256+128,128)
         self.conv_up1 = conv_up(128+64,64)
-        self.conv_last = nn.Conv2d(64,1,3,padding=1)
+        self.conv_last = nn.Conv2d(64,n_channels,3,padding=1)
         self.maxpool = nn.MaxPool2d(2)
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)        
         self.activation = nn.Softmax()
 
     def forward(self, x):
+
         x = conv1 = self.conv_down1(x)
         x = pool1 = self.maxpool(x)
         x = conv2 = self.conv_down2(x)
@@ -53,6 +56,7 @@ class VggUnetKs(nn.Module):
         x = pool3 = self.maxpool(x)
         x = conv4 = self.conv_down4(x)
         x = pool4 = self.maxpool(x)
+
         x = self.conv_up4(x)
         #x = self.batch_norm(x)
         x = self.upsample(x)
