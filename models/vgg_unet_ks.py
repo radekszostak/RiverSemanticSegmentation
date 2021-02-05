@@ -30,12 +30,60 @@ def conv_up(in_channels, out_channels):
 class VggUnetKs(nn.Module):
     def __init__(self, n_channels=2 ):
         super().__init__()
-        #self.vgg16 = vgg16_pretrained.features
+        self.encoder = torch.nn.Sequential(
+            # conv1
+            torch.nn.Conv2d(3, 64, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.Conv2d(64, 64, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.MaxPool2d(2, stride=2),
+            # conv2
+            torch.nn.Conv2d(64, 128, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.Conv2d(128, 128, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.MaxPool2d(2, stride=2),
+            # conv3
+            torch.nn.Conv2d(128, 256, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.Conv2d(256, 256, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.Conv2d(256, 256, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.MaxPool2d(2, stride=2),
+            # conv4
+            torch.nn.Conv2d(256, 512, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.Conv2d(512, 512, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.Conv2d(512, 512, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.MaxPool2d(2, stride=2),
+            """
+            # conv5
+            torch.nn.Conv2d(512, 512, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.Conv2d(512, 512, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.Conv2d(512, 512, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.MaxPool2d(2, stride=2)
+            """
+        self.pool_outputs = dict()
+
+        # initialize weights
+        for i in range(len(self.encoder)):
+            if isinstance(layer, torch.nn.Conv2d):
+                self.encoder[i].weight.data = vgg16_pretrained.features[i].weight.data
+                self.encoder[i].bias.data = vgg16_pretrained.features[i].bias.data
+
+        """
         self.conv_down1 = double_conv(3, 64)
         self.conv_down2 = double_conv(64, 128)
         self.conv_down3 = triple_conv(128, 256)
         self.conv_down4 = triple_conv(256, 512)
         self.conv_bottom = nn.Conv2d(512,512,3,padding=1)
+        """
         #self.batch_norm = nn.BatchNorm2d(512,0.001,0.99)
         self.conv_up4 = conv_up(512,512)
         self.conv_up3 = conv_up(512+256,256)
@@ -45,9 +93,20 @@ class VggUnetKs(nn.Module):
         self.maxpool = nn.MaxPool2d(2)
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)        
         self.activation = nn.Softmax()
-
+    
+    def forward_encoder(self, x):
+        output = x
+        i=1
+        for layer in self.vgg16:
+            output = layer(output)
+            if isinstance(layer, torch.nn.MaxPool2d):
+                self.pool_outputs[i]=output
+                i+=1
+        return output
+    
     def forward(self, x):
-
+        forward_encoder(x)
+        """
         x = conv1 = self.conv_down1(x)
         x = pool1 = self.maxpool(x)
         x = conv2 = self.conv_down2(x)
@@ -56,17 +115,18 @@ class VggUnetKs(nn.Module):
         x = pool3 = self.maxpool(x)
         x = conv4 = self.conv_down4(x)
         x = pool4 = self.maxpool(x)
+        """
 
         x = self.conv_up4(x)
         #x = self.batch_norm(x)
         x = self.upsample(x)
-        x = torch.cat([x, pool3], dim=1)
+        x = torch.cat([x, self.pool_outputs[3]], dim=1)
         x = self.conv_up3(x)
         x = self.upsample(x)        
-        x = torch.cat([x, pool2], dim=1)
+        x = torch.cat([x, self.pool_outputs[2]], dim=1)
         x = self.conv_up2(x)
         x = self.upsample(x)        
-        x = torch.cat([x, pool1], dim=1)
+        x = torch.cat([x, self.pool_outputs[1]], dim=1)
         x = self.conv_up1(x)
         out = self.conv_last(x)
         
