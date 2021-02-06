@@ -58,32 +58,17 @@ class VggUnetKs(nn.Module):
             torch.nn.ReLU(),
             torch.nn.Conv2d(512, 512, 3, padding=1),
             torch.nn.ReLU(),
-            torch.nn.MaxPool2d(2, stride=2),
-            """
-            # conv5
-            torch.nn.Conv2d(512, 512, 3, padding=1),
-            torch.nn.ReLU(),
-            torch.nn.Conv2d(512, 512, 3, padding=1),
-            torch.nn.ReLU(),
-            torch.nn.Conv2d(512, 512, 3, padding=1),
-            torch.nn.ReLU(),
             torch.nn.MaxPool2d(2, stride=2)
-            """
+
+        )
         self.pool_outputs = dict()
 
         # initialize weights
         for i in range(len(self.encoder)):
-            if isinstance(layer, torch.nn.Conv2d):
+            if isinstance(self.encoder[i], torch.nn.Conv2d):
                 self.encoder[i].weight.data = vgg16_pretrained.features[i].weight.data
                 self.encoder[i].bias.data = vgg16_pretrained.features[i].bias.data
 
-        """
-        self.conv_down1 = double_conv(3, 64)
-        self.conv_down2 = double_conv(64, 128)
-        self.conv_down3 = triple_conv(128, 256)
-        self.conv_down4 = triple_conv(256, 512)
-        self.conv_bottom = nn.Conv2d(512,512,3,padding=1)
-        """
         #self.batch_norm = nn.BatchNorm2d(512,0.001,0.99)
         self.conv_up4 = conv_up(512,512)
         self.conv_up3 = conv_up(512+256,256)
@@ -97,7 +82,7 @@ class VggUnetKs(nn.Module):
     def forward_encoder(self, x):
         output = x
         i=1
-        for layer in self.vgg16:
+        for layer in self.encoder:
             output = layer(output)
             if isinstance(layer, torch.nn.MaxPool2d):
                 self.pool_outputs[i]=output
@@ -105,18 +90,7 @@ class VggUnetKs(nn.Module):
         return output
     
     def forward(self, x):
-        forward_encoder(x)
-        """
-        x = conv1 = self.conv_down1(x)
-        x = pool1 = self.maxpool(x)
-        x = conv2 = self.conv_down2(x)
-        x = pool2 = self.maxpool(x)
-        x = conv3 = self.conv_down3(x)
-        x = pool3 = self.maxpool(x)
-        x = conv4 = self.conv_down4(x)
-        x = pool4 = self.maxpool(x)
-        """
-
+        x = self.forward_encoder(x)
         x = self.conv_up4(x)
         #x = self.batch_norm(x)
         x = self.upsample(x)
