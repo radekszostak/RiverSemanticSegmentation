@@ -2,7 +2,7 @@
 
 ## Uruchomienie:
 
-1. Pobrać dataset: https://drive.google.com/drive/folders/1eZxNSwuRe8KnTQbtwCtDWmsWnufUrwws?usp=sharing
+1. Dataset do pobrania: https://drive.google.com/drive/folders/1eZxNSwuRe8KnTQbtwCtDWmsWnufUrwws?usp=sharing
 2. Trenowanie odbywa się w pliku train.ipynb. Należy w nim zmodyfikować:
 	- ścieżkę do workdir:
 	```python
