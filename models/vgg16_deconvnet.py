@@ -115,7 +115,7 @@ class VggDeconvNet(nn.Module):
             torch.nn.Dropout(),
             torch.nn.Linear(4096, 1))
         
-        #initialize weights with pretrained
+
     def forward_encoder(self, x):
         output = x
         i=1
@@ -124,6 +124,7 @@ class VggDeconvNet(nn.Module):
                 output, indices = layer(output)
                 #self.feature_outputs[i] = output
                 self.pool_indices[i] = indices
+                i+=1
             else:
                 output = layer(output)
                 #self.feature_outputs[i] = output
