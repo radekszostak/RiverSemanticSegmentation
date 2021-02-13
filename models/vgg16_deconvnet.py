@@ -5,42 +5,6 @@ import torchvision.models as models
 
 vgg16_pretrained = models.vgg16(pretrained=True)
 
-def double_conv(in_channels, out_channels):
-    return nn.Sequential(
-        nn.Conv2d(in_channels, out_channels, 3, padding=1),
-        nn.ReLU(inplace=True),
-        nn.Conv2d(out_channels, out_channels, 3, padding=1),
-        nn.ReLU(inplace=True),
-        #nn.BatchNorm2d(out_channels)
-    )
-def triple_conv(in_channels, out_channels):
-    return nn.Sequential(
-        nn.Conv2d(in_channels, out_channels, 3, padding=1),
-        nn.ReLU(inplace=True),
-        nn.Conv2d(out_channels, out_channels, 3, padding=1),
-        nn.ReLU(inplace=True),
-        nn.Conv2d(out_channels, out_channels, 3, padding=1),
-        nn.ReLU(inplace=True),
-        #nn.BatchNorm2d(out_channels)
-    )
-def double_deconv(in_channels, out_channels):
-    return nn.Sequential(
-        nn.ConvTranspose2d(in_channels, in_channels, 3, padding=1),
-        nn.ReLU(inplace=True),
-        nn.ConvTranspose2d(in_channels, out_channels, 3, padding=1),
-        nn.ReLU(inplace=True),
-        nn.BatchNorm2d(out_channels)
-    )
-def triple_deconv(in_channels, out_channels):
-    return nn.Sequential(
-        nn.ConvTranspose2d(in_channels, in_channels, 3, padding=1),
-        nn.ReLU(inplace=True),
-        nn.ConvTranspose2d(in_channels, in_channels, 3, padding=1),
-        nn.ReLU(inplace=True),
-        nn.ConvTranspose2d(in_channels, out_channels, 3, padding=1),
-        nn.ReLU(inplace=True),
-        nn.BatchNorm2d(out_channels)
-    )
 class VggDeconvNet(nn.Module):
     def __init__(self, n_classes=2):
         super().__init__()
@@ -74,15 +38,16 @@ class VggDeconvNet(nn.Module):
             torch.nn.ReLU(),
             torch.nn.MaxPool2d(2, stride=2, return_indices=True),
             # conv5
-            torch.nn.Conv2d(512, 512, 3, padding=1),
-            torch.nn.ReLU(),
-            torch.nn.Conv2d(512, 512, 3, padding=1),
-            torch.nn.ReLU(),
-            torch.nn.Conv2d(512, 512, 3, padding=1),
-            torch.nn.ReLU(),
-            torch.nn.MaxPool2d(2, stride=2, return_indices=True)
+            #torch.nn.ReLU(),
+            #torch.nn.Conv2d(512, 512, 3, padding=1),
+            #torch.nn.ReLU(),
+            #torch.nn.Conv2d(512, 512, 3, padding=1),
+            #torch.nn.Conv2d(512, 512, 3, padding=1),
+            #torch.nn.ReLU(),
+            #torch.nn.MaxPool2d(2, stride=2, return_indices=True)
         )
 
+        # declare pool indices dictionary
         self.pool_indices = dict()
 
         # initialize weights
@@ -100,53 +65,73 @@ class VggDeconvNet(nn.Module):
           nn.ReLU(inplace=True)
         )
 
-        self.deconv5 = triple_deconv(512,512)
-        self.deconv4 = triple_deconv(512,256)
-        self.deconv3 = triple_deconv(256,128)
-        self.deconv2 = double_deconv(128,64)
-        self.deconv1 = double_deconv(64,n_classes)
-        self.maxunpool = nn.MaxUnpool2d(2, stride=2)
-        self.classifier = torch.nn.Sequential(
-            torch.nn.Linear(512*13*13, 4096), 
-            torch.nn.ReLU(),
-            torch.nn.Dropout(),
-            torch.nn.Linear(4096, 4096),
-            torch.nn.ReLU(),
-            torch.nn.Dropout(),
-            torch.nn.Linear(4096, 1))
-        
+        self.decoder = nn.Sequential(
+          #deconv5
+          #nn.MaxUnpool2d(2, stride=2),
+          #nn.ConvTranspose2d(512, 512, 3, padding=1),
+          #nn.ReLU(inplace=True),
+          #nn.ConvTranspose2d(512, 512, 3, padding=1),
+          #nn.ReLU(inplace=True),
+          #nn.ConvTranspose2d(512, 512, 3, padding=1),
+          #nn.ReLU(inplace=True),
+          #nn.BatchNorm2d(512),
+          #deconv4
+          nn.MaxUnpool2d(2, stride=2),
+          nn.ConvTranspose2d(512, 512, 3, padding=1),
+          nn.ReLU(inplace=True),
+          nn.ConvTranspose2d(512, 512, 3, padding=1),
+          nn.ReLU(inplace=True),
+          nn.ConvTranspose2d(512, 256, 3, padding=1),
+          nn.ReLU(inplace=True),
+          nn.BatchNorm2d(256),
+          #deconv3
+          nn.MaxUnpool2d(2, stride=2),
+          nn.ConvTranspose2d(256, 256, 3, padding=1),
+          nn.ReLU(inplace=True),
+          nn.ConvTranspose2d(256, 256, 3, padding=1),
+          nn.ReLU(inplace=True),
+          nn.ConvTranspose2d(256, 128, 3, padding=1),
+          nn.ReLU(inplace=True),
+          nn.BatchNorm2d(128),
+          #deconv2
+          nn.MaxUnpool2d(2, stride=2),
+          nn.ConvTranspose2d(128, 128, 3, padding=1),
+          nn.ReLU(inplace=True),
+          nn.ConvTranspose2d(128, 64, 3, padding=1),
+          nn.ReLU(inplace=True),
+          nn.BatchNorm2d(64),
+          #deconv1
+          nn.MaxUnpool2d(2, stride=2),
+          nn.ConvTranspose2d(64, 64, 3, padding=1),
+          nn.ReLU(inplace=True),
+          nn.ConvTranspose2d(64, n_classes, 3, padding=1),
+          nn.ReLU(inplace=True),
+          nn.BatchNorm2d(n_classes)
+        )
+        self.activation = torch.nn.Softmax(dim=1)
 
-    def forward_encoder(self, x):
-        output = x
-        i=1
-        for layer in self.encoder:
-            if isinstance(layer, torch.nn.MaxPool2d):
-                output, indices = layer(output)
-                #self.feature_outputs[i] = output
-                self.pool_indices[i] = indices
-                i+=1
-            else:
-                output = layer(output)
-                #self.feature_outputs[i] = output
-        return output
 
     def forward(self, x):
-        x = self.forward_encoder(x)
-        x = self.bottom(x)
-        #x = x.view(x.size()[0], -1)
-        #print(x.size())
-        #x = self.classifier(x)
-        #print(x.size())
-        x = self.maxunpool(x, self.pool_indices[5])
-        x = self.deconv5(x)
-        x = self.maxunpool(x, self.pool_indices[4])
-        x = self.deconv4(x)
-        x = self.maxunpool(x, self.pool_indices[3])
-        x = self.deconv3(x)
-        x = self.maxunpool(x, self.pool_indices[2])
-        x = self.deconv2(x)
-        x = self.maxunpool(x, self.pool_indices[1])
-        x = self.deconv1(x)
-
-        return x  
+      #block index initialization
+      i=0
+      #forward encoder
+      for layer in self.encoder:
+          if isinstance(layer, torch.nn.MaxPool2d):
+              i+=1 # 1 -> 5
+              x, indices = layer(x)
+              self.pool_indices[i] = indices
+              
+          else:
+              x = layer(x)
+      #bottom
+      x = self.bottom(x)
+      #forward decoder
+      for layer in self.decoder:
+          if isinstance(layer, torch.nn.MaxUnpool2d):
+              x = layer(x, self.pool_indices[i])
+              i-=1 # 5 -> 1
+          else:
+              x = layer(x)
+      x = self.activation(x)
+      return x  
   
