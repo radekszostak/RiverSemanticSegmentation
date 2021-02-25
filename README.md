@@ -1,5 +1,15 @@
 # RiverSemanticSegmentation
 
+## Informacje ogólne:
+
+Repozytorium zawiera program pozwalający na trening modelów opartych na konwolucyjnych sieciach neuronowych służacych do segmentacji obszarów rzecznych na zdjęciach satelitarnych skomponowanych z pasm widzialnych RGB.
+
+## Użyte narzędzia:
+- PyTorch - framework ML
+- OpenCV - biblioteka do przetwarzania obrazów
+- NumPy - biblioteka do operacji na macierzach
+- neptune - narzędzie logujące
+
 ## Uruchomienie:
 
 1. Dataset do pobrania: https://drive.google.com/drive/folders/1eZxNSwuRe8KnTQbtwCtDWmsWnufUrwws?usp=sharing
