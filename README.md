@@ -6,6 +6,7 @@ Repozytorium zawiera program pozwalający na trening modelów opartych na konwol
 
 ## Rezultaty
 Autorska implementacja modelu vgg_unet uzyskała wynik IoU=0.90174
+
 ![results.png](https://i.postimg.cc/Hk06sPNr/results.png)
 
 ## Użyte narzędzia
