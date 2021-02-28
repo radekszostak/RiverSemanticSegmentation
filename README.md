@@ -5,7 +5,7 @@
 Repozytorium zawiera program pozwalający na trening modelów opartych na konwolucyjnych sieciach neuronowych służacych do segmentacji obszarów rzecznych na zdjęciach satelitarnych skomponowanych z pasm widzialnych RGB.
 
 ## Rezultaty
-Autorska implementacja modelu vgg_unet uzyskała wynik IoU=0.90174. Poniżej przedstwaiono przykłądowe segmentacje (Kolumny odpowiednio: wejście, wzór, wyjście modelu).
+Autorska implementacja modelu vgg_unet uzyskała wynik IoU=0.90174. Poniżej przedstwaiono przykładowe dane (kolumny odpowiednio: wejście, wzorowe wyjście, wyjście modelu).
 
 ![results.png](https://i.postimg.cc/Hk06sPNr/results.png)
 
