@@ -4,6 +4,9 @@
 
 Repozytorium zawiera program pozwalający na trening modelów opartych na konwolucyjnych sieciach neuronowych służacych do segmentacji obszarów rzecznych na zdjęciach satelitarnych skomponowanych z pasm widzialnych RGB.
 
+## Rezultaty
+![results.png](https://i.postimg.cc/Hk06sPNr/results.png)
+
 ## Użyte narzędzia:
 - PyTorch - framework ML
 - OpenCV - biblioteka do przetwarzania obrazów
