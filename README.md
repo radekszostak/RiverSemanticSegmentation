@@ -31,5 +31,5 @@ Uruchomienie kodu na własnym komputerze wymaga wykonania następujących krokó
 3. Modyfikacja ścieżki do zbioru danych w pliku [train.ipynb](train.ipynb):
     ```Python
     #dataset configuration
-    dataset_dir = os.path.normpath("/content/drive/MyDrive/DEM-waterlevel/dataset")
+    dataset_dir = os.path.normpath("/content/drive/MyDrive/SemanticSegmentationV2/dataset/")
     ```
