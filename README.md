@@ -15,17 +15,21 @@ Autorska implementacja modelu vgg_unet uzyskała wynik IoU=0.90174. Poniżej prz
 - NumPy - biblioteka do operacji na macierzach
 - neptune - narzędzie logujące
 
-## Uruchomienie
+## Dataset
 
-1. Dataset do pobrania: https://drive.google.com/drive/folders/1eZxNSwuRe8KnTQbtwCtDWmsWnufUrwws?usp=sharing
-2. Trenowanie odbywa się w pliku train.ipynb. Należy w nim zmodyfikować:
-	- ścieżkę do workdir:
-	```python
-	#set workdir
-	os.chdir("/content/drive/MyDrive/RiverSemanticSegmentation/")
-	```
-	- ścieżkę do datasetu
-	```python
-	#dataset configuration
-	dataset_dir = os.path.normpath("/content/drive/MyDrive/SemanticSegmentationV2/dataset/")
-	```
+Dataset do pobrania z oddzielnego repozytorium: https://github.com/shocik/sentinel-river-segmentation-dataset
+
+## Uruchomienie
+Uruchomienie kodu na własnym komputerze wymaga wykonania następujących kroków przygotowujących:
+
+1. Wprowadzenie danych neptune w pliku [config.cfg](config.cfg).
+2. Modyfikacja ścieżki do folderu roboczego w pliku [train.ipynb](train.ipynb):
+    ```Python
+    #set workdir
+    os.chdir("/content/drive/MyDrive/DEM-waterlevel/ml/")
+    ```
+3. Modyfikacja ścieżki do zbioru danych w pliku [train.ipynb](train.ipynb):
+    ```Python
+    #dataset configuration
+    dataset_dir = os.path.normpath("/content/drive/MyDrive/DEM-waterlevel/dataset")
+    ```
