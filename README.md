@@ -1,6 +1,21 @@
 # RiverSemanticSegmentation
 
-## Uruchomienie:
+## Informacje ogólne
+
+Repozytorium zawiera program pozwalający na trening modeli opartych na konwolucyjnych sieciach neuronowych służacych do segmentacji obszarów rzecznych na zdjęciach satelitarnych skomponowanych z pasm widzialnych RGB.
+
+## Rezultaty
+Autorska implementacja modelu vgg_unet uzyskała wynik IoU=0.90174. Poniżej przedstwaiono przykładowe dane (kolumny odpowiednio: wejście, wzorowe wyjście, wyjście modelu).
+
+![results.png](https://i.postimg.cc/Hk06sPNr/results.png)
+
+## Użyte narzędzia
+- PyTorch - framework ML
+- OpenCV - biblioteka do przetwarzania obrazów
+- NumPy - biblioteka do operacji na macierzach
+- neptune - narzędzie logujące
+
+## Uruchomienie
 
 1. Dataset do pobrania: https://drive.google.com/drive/folders/1eZxNSwuRe8KnTQbtwCtDWmsWnufUrwws?usp=sharing
 2. Trenowanie odbywa się w pliku train.ipynb. Należy w nim zmodyfikować:
