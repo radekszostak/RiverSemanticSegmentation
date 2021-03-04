@@ -26,7 +26,7 @@ Uruchomienie kodu na własnym komputerze wymaga wykonania następujących krokó
 2. Modyfikacja ścieżki do folderu roboczego w pliku [train.ipynb](train.ipynb):
     ```Python
     #set workdir
-    os.chdir("/content/drive/MyDrive/DEM-waterlevel/ml/")
+    os.chdir("/content/drive/MyDrive/RiverSemanticSegmentation/")
     ```
 3. Modyfikacja ścieżki do zbioru danych w pliku [train.ipynb](train.ipynb):
     ```Python
