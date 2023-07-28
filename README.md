@@ -1,34 +1,34 @@
 # RiverSemanticSegmentation
 
-## Informacje ogólne
+## Overview
 
-Repozytorium zawiera program pozwalający na trening modeli opartych na konwolucyjnych sieciach neuronowych służacych do segmentacji obszarów rzecznych na zdjęciach satelitarnych skomponowanych z pasm widzialnych RGB.
+The repository contains a code that allows training models based on convolutional neural networks for segmenting river areas in satellite images composed of RGB visible bands.
 
-## Rezultaty
-Autorska implementacja modelu vgg_unet uzyskała wynik IoU=0.90174. Poniżej przedstwaiono przykładowe dane (kolumny odpowiednio: wejście, wzorowe wyjście, wyjście modelu).
+## Results
+The author's implementation of the vgg_unet model scored IoU=0.90174. Below is a sample data (columns: input, model output, model output, respectively).
 
 ![results.png](https://i.postimg.cc/Hk06sPNr/results.png)
 
-## Użyte narzędzia
-- PyTorch - framework ML
-- OpenCV - biblioteka do przetwarzania obrazów
-- NumPy - biblioteka do operacji na macierzach
-- neptune - narzędzie logujące
-
+## Tools used
+- PyTorch - ML framework
+- OpenCV - a library for image processing
+- NumPy - a library for matrix operations
+- neptune - logging tool
+- 
 ## Dataset
 
-Dataset do pobrania z oddzielnego repozytorium: https://github.com/shocik/sentinel-river-segmentation-dataset
+Dataset available for download from a separate repository: https://github.com/shocik/sentinel-river-segmentation-dataset
 
-## Uruchomienie
-Uruchomienie kodu na własnym komputerze wymaga wykonania następujących kroków przygotowujących:
+## Running the solution
+Running the code on your own computer requires the following preparatory steps:
 
-1. Wprowadzenie danych neptune w pliku [config.cfg](config.cfg).
-2. Modyfikacja ścieżki do folderu roboczego w pliku [train.ipynb](train.ipynb):
+1. Neptune configuration in file [config.cfg](config.cfg).
+2. Modify the path to the working directory in the file [train.ipynb](train.ipynb):
     ```Python
     #set workdir
     os.chdir("/content/drive/MyDrive/RiverSemanticSegmentation/")
     ```
-3. Modyfikacja ścieżki do zbioru danych w pliku [train.ipynb](train.ipynb):
+3. Modifying the path to a dataset in a file [train.ipynb](train.ipynb):
     ```Python
     #dataset configuration
     dataset_dir = os.path.normpath("/content/drive/MyDrive/SemanticSegmentationV2/dataset/")
