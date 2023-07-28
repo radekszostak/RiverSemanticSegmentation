@@ -14,9 +14,8 @@ The author's implementation of the vgg_unet model scored IoU=0.90174. Below is a
 - OpenCV - a library for image processing
 - NumPy - a library for matrix operations
 - neptune - logging tool
-- 
-## Dataset
 
+## Dataset
 Dataset available for download from a separate repository: https://github.com/shocik/sentinel-river-segmentation-dataset
 
 ## Running the solution
